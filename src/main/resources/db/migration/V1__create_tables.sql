@@ -20,7 +20,7 @@ CREATE TABLE topics (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
     message VARCHAR(300) NOT NULL,
-    create_date DATETIME NOT NULL,
+    creation_date DATETIME NOT NULL,
     status VARCHAR(20) NOT NULL,
     author_id BIGINT NOT NULL,
     course_id BIGINT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE topics (
 CREATE TABLE answers (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     message VARCHAR(300) NOT NULL,
-    create_date DATETIME NOT NULL,
+    creation_date DATETIME NOT NULL,
     solution VARCHAR(300),
     topic_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,

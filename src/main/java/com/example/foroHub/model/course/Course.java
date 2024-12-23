@@ -5,8 +5,6 @@ import lombok.*;
 
 @Entity
 @Table(name = "courses")
-@Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +15,28 @@ public class Course {
     private String name;
     @Enumerated(EnumType.STRING)
     private CategoryEnum categoryEnum;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CategoryEnum getCategoryEnum() {
+        return categoryEnum;
+    }
+
+    public void setCategoryEnum(CategoryEnum categoryEnum) {
+        this.categoryEnum = categoryEnum;
+    }
 }

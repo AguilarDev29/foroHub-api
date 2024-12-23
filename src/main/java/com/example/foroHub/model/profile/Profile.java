@@ -5,8 +5,6 @@ import lombok.*;
 
 @Entity
 @Table(name = "profiles")
-@Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +14,20 @@ public class Profile {
     private Long id;
     @Enumerated(EnumType.STRING)
     private ProfileEnum name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ProfileEnum getName() {
+        return name;
+    }
+
+    public void setName(ProfileEnum name) {
+        this.name = name;
+    }
 }
