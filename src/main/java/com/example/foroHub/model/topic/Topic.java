@@ -28,11 +28,11 @@ public class Topic {
     private LocalDateTime creationDate = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
     private StatusEnum status = StatusEnum.OPEN;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     @NotNull
     private User author;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     @NotNull
     private Course course;

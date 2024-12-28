@@ -4,6 +4,8 @@ import com.example.foroHub.model.course.Course;
 import com.example.foroHub.model.topic.StatusEnum;
 import com.example.foroHub.model.topic.Topic;
 import com.example.foroHub.model.user.User;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
@@ -12,12 +14,12 @@ public record DtoShowTopic(
         String message,
         LocalDateTime creationDate,
         StatusEnum status,
-        User author,
-        Course course
+        String author,
+        String course
 
 ) {
     public DtoShowTopic(Topic topic) {
         this(topic.getTitle(), topic.getMessage(), topic.getCreationDate(),
-                topic.getStatus(), topic.getAuthor(), topic.getCourse());
+                topic.getStatus(), topic.getAuthor().getUsername(), topic.getCourse().getName());
     }
 }

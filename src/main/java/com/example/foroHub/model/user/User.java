@@ -1,33 +1,36 @@
 package com.example.foroHub.model.user;
 
-import com.example.foroHub.model.profile.Profile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    @NotBlank
     private String username;
     @Email
     @Column(unique = true)
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
-    @ManyToMany
-    @JoinTable(
-            name = "users_profiles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "profile_id")
-    )
-    private List<Profile> profiles;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Set<ProfileEnum> profiles = Set.of(ProfileEnum.USER);
 
     public Long getId() {
         return id;
@@ -61,11 +64,11 @@ public class User {
         this.password = password;
     }
 
-    public List<Profile> getProfiles() {
+    public Set<ProfileEnum> getProfiles() {
         return profiles;
     }
 
-    public void setProfiles(List<Profile> profiles) {
+    public void setProfiles(Set<ProfileEnum> profiles) {
         this.profiles = profiles;
     }
 }

@@ -14,7 +14,7 @@ public class Course {
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
-    private CategoryEnum categoryEnum;
+    private CategoryEnum category;
 
     public Long getId() {
         return id;
@@ -32,11 +32,11 @@ public class Course {
         this.name = name;
     }
 
-    public CategoryEnum getCategoryEnum() {
-        return categoryEnum;
+    public CategoryEnum getCategory() {
+        return category;
     }
 
-    public void setCategoryEnum(CategoryEnum categoryEnum) {
-        this.categoryEnum = categoryEnum;
+    public void setCategory(CategoryEnum category) {
+        this.category = category;
     }
 }

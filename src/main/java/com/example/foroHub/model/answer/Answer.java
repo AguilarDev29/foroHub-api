@@ -3,6 +3,8 @@ package com.example.foroHub.model.answer;
 import com.example.foroHub.model.topic.Topic;
 import com.example.foroHub.model.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,16 +18,18 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String message;
     @ManyToOne
     @JoinColumn(name = "topic_id")
+    @NotNull
     private Topic topic;
-    @Column(name = "create_date")
+    @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @NotNull
     private User author;
-    private String solution;
 
     public Long getId() {
         return id;
@@ -67,11 +71,4 @@ public class Answer {
         this.author = author;
     }
 
-    public String getSolution() {
-        return solution;
-    }
-
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
 }

@@ -4,5 +4,7 @@ public enum CategoryEnum {
     FRONTEND,
     BACKEND,
     DATABASES,
-    DEVOPS
+    DEVOPS,
+    BIGDATA,
+    GENERAL
 }

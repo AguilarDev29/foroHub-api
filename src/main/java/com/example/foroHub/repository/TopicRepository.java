@@ -1,4 +1,4 @@
-package com.example.foroHub.repository.topic;
+package com.example.foroHub.repository;
 
 import com.example.foroHub.model.topic.Topic;
 import org.springframework.data.domain.Page;

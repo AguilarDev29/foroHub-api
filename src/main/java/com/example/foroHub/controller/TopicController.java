@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/topic")
+@RequestMapping("/topics")
 public class TopicController {
 
     private final TopicService topicService;
@@ -48,8 +48,8 @@ public class TopicController {
         return ResponseEntity.ok(new DtoShowTopic(topic));
     }
 
-    @PutMapping
-    public ResponseEntity<DtoShowTopic> updateTopic(@RequestBody @Valid Long id, DtoUpdateTopic data){
+    @PutMapping("/{id}")
+    public ResponseEntity<DtoShowTopic> updateTopic(@PathVariable Long id, @RequestBody @Valid DtoUpdateTopic data){
         var optionalTopic = topicService.showTopicById(id);
         if(optionalTopic.isPresent()){
             var topic = optionalTopic.get();
@@ -66,7 +66,7 @@ public class TopicController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/close")
     public ResponseEntity<Void> closeTopic(@PathVariable Long id){
         var optionalTopic = topicService.showTopicById(id);
         if(optionalTopic.isPresent()){

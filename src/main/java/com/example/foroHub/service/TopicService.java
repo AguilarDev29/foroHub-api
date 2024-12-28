@@ -2,8 +2,7 @@ package com.example.foroHub.service;
 
 import com.example.foroHub.model.topic.StatusEnum;
 import com.example.foroHub.model.topic.Topic;
-import com.example.foroHub.repository.topic.TopicRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.foroHub.repository.TopicRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

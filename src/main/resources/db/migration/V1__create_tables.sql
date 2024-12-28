@@ -1,8 +1,3 @@
-CREATE TABLE profiles (
-    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE users (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL,
@@ -32,7 +27,6 @@ CREATE TABLE answers (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     message VARCHAR(300) NOT NULL,
     creation_date DATETIME NOT NULL,
-    solution VARCHAR(300),
     topic_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,
     FOREIGN KEY (topic_id) REFERENCES topics(id),
