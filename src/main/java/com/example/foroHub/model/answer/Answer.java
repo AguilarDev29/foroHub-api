@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "answers")
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +29,8 @@ public class Answer {
     @JoinColumn(name = "author_id")
     @NotNull
     private User author;
+
+    public Answer(){}
 
     public Long getId() {
         return id;

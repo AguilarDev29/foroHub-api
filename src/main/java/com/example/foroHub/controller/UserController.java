@@ -1,6 +1,7 @@
 package com.example.foroHub.controller;
 
 import com.example.foroHub.model.user.User;
+import com.example.foroHub.model.user.dto.DtoUpdateUser;
 import com.example.foroHub.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
@@ -34,12 +38,33 @@ public class UserController {
     }
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody @Valid User user){
-        return ResponseEntity.ok(userService.createUser(user));
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(userService.createUser(user));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody DtoUpdateUser data){
+        var optionalUser = userService.findUserById(id);
+        if(optionalUser.isPresent()){
+            var user = optionalUser.get();
+            userService.updateUser(user, data);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        var optionalUser = userService.findUserById(id);
+        if(optionalUser.isPresent()){
+            var user = optionalUser.get();
+            userService.deleteUser(user.getId());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 

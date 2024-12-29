@@ -12,7 +12,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
@@ -27,10 +26,16 @@ public class User {
     private String email;
     @NotBlank
     private String password;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private Set<ProfileEnum> profiles = Set.of(ProfileEnum.USER);
+
+    public User(){}
+
+    public User(Long id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 
     public Long getId() {
         return id;

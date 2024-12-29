@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "courses")
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +14,13 @@ public class Course {
     private String name;
     @Enumerated(EnumType.STRING)
     private CategoryEnum category;
+
+    public Course(){}
+
+    public Course(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

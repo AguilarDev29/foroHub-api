@@ -1,16 +1,20 @@
 package com.example.foroHub.controller;
 
 import com.example.foroHub.model.topic.Topic;
+import com.example.foroHub.model.topic.dto.DtoCreateTopic;
 import com.example.foroHub.model.topic.dto.DtoShowTopic;
 import com.example.foroHub.model.topic.dto.DtoUpdateTopic;
 import com.example.foroHub.service.TopicService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/topics")
@@ -23,12 +27,14 @@ public class TopicController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<DtoShowTopic>> showAllTopics(@PageableDefault(value = 10) Pageable pageable){
+    public ResponseEntity<Page<DtoShowTopic>> showAllTopics(@PageableDefault(value = 10,
+            sort = "creationDate", direction = Sort.Direction.ASC) Pageable pageable){
         return ResponseEntity.ok(topicService.showAllTopics(pageable).map(DtoShowTopic::new));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DtoShowTopic>> showOpenTopics(@PageableDefault(value = 10) Pageable pageable){
+    public ResponseEntity<Page<DtoShowTopic>> showOpenTopics(@PageableDefault(value = 10,
+            sort = "creationDate", direction = Sort.Direction.ASC) Pageable pageable){
         return ResponseEntity.ok(topicService.showOpenTopics(pageable).map(DtoShowTopic::new));
     }
 
@@ -43,25 +49,22 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<DtoShowTopic> createTopic(@RequestBody @Valid Topic topic){
-        topicService.saveTopic(topic);
-        return ResponseEntity.ok(new DtoShowTopic(topic));
+    public ResponseEntity<DtoShowTopic> createTopic(@RequestBody @Valid DtoCreateTopic data){
+        var topic = topicService.saveTopic(new Topic(data.title(), data.message(), data.author(), data.course()));
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(topic.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(new DtoShowTopic(topic));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DtoShowTopic> updateTopic(@PathVariable Long id, @RequestBody @Valid DtoUpdateTopic data){
+    public ResponseEntity<Void> updateTopic(@PathVariable Long id, @RequestBody @Valid DtoUpdateTopic data){
         var optionalTopic = topicService.showTopicById(id);
         if(optionalTopic.isPresent()){
             var topic = optionalTopic.get();
-
-            if(data.title() != null) topic.setTitle(data.title());
-
-            if(data.message() != null) topic.setMessage(data.message());
-
-            if(data.course() != null) topic.setCourse(data.course());
-
-            topicService.saveTopic(topic);
-            return ResponseEntity.ok(new DtoShowTopic(topic));
+            topicService.updateTopic(topic, data);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
@@ -72,15 +75,20 @@ public class TopicController {
         if(optionalTopic.isPresent()){
             var topic = optionalTopic.get();
             topicService.closeTopic(topic.getId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTopic(@PathVariable Long id){
-        topicService.deleteTopic(id);
-        return ResponseEntity.noContent().build();
+        var optionalTopic = topicService.showTopicById(id);
+        if(optionalTopic.isPresent()){
+            var topic = optionalTopic.get();
+            topicService.deleteTopic(topic.getId());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

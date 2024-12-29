@@ -2,7 +2,9 @@ package com.example.foroHub.model.topic;
 
 import com.example.foroHub.model.answer.Answer;
 import com.example.foroHub.model.course.Course;
+import com.example.foroHub.model.course.dto.DtoCreateTopicCourse;
 import com.example.foroHub.model.user.User;
+import com.example.foroHub.model.user.dto.DtoCreateTopicAuthor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +17,6 @@ import java.util.List;
 @Table(name = "topics")
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,20 +25,30 @@ public class Topic {
     @Column(unique = true)
     private String title;
     @NotBlank
+    @Column(unique = true)
     private String message;
     private LocalDateTime creationDate = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
     private StatusEnum status = StatusEnum.OPEN;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "author_id")
     @NotNull
     private User author;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "course_id")
     @NotNull
     private Course course;
-    @OneToMany(mappedBy = "topic")
-    private List<Answer> answers;
+    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
+    private List<Answer> answers = List.of();
+
+    public Topic(){}
+
+    public Topic(String title, String message, DtoCreateTopicAuthor author, DtoCreateTopicCourse course) {
+        this.title = title;
+        this.message = message;
+        this.author = new User(author.id(), author.username());
+        this.course = new Course(course.id(), course.name());
+    }
 
     public Long getId() {
         return id;

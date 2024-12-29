@@ -1,13 +1,16 @@
 package com.example.foroHub.controller;
 
 import com.example.foroHub.model.course.Course;
+import com.example.foroHub.model.course.dto.DtoUpdateCourse;
 import com.example.foroHub.service.CourseService;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/courses")
@@ -23,19 +26,41 @@ public class CourseController {
     public ResponseEntity<Page<Course>> findAllCourses(@PageableDefault(size = 10) Pageable pageable){
         return ResponseEntity.ok(courseService.showAllCourses(pageable));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Course> findCourseById(@PathVariable Long id){
-        return ResponseEntity.ok(courseService.showCourseById(id));
+        var optionalCourse = courseService.showCourseById(id);
+        if (optionalCourse.isPresent()){
+            var course = optionalCourse.get();
+            return ResponseEntity.ok(course);
+        }
+        return ResponseEntity.notFound().build();
     }
-    
     @PostMapping
     public ResponseEntity<Course> createCourse(@RequestBody Course course){
-        return ResponseEntity.ok(courseService.createCourse(course));
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(course.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(course);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody DtoUpdateCourse data){
+        var optionalCourse = courseService.showCourseById(id);
+        if(optionalCourse.isPresent()){
+            var course = optionalCourse.get();
+            courseService.updateCourse(course, data);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id){
-        courseService.deleteCourse(id);
-        return ResponseEntity.noContent().build();
+        var optionalCourse = courseService.showCourseById(id);
+        if(optionalCourse.isPresent()){
+            var course = optionalCourse.get();
+            courseService.deleteCourse(course.getId());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -2,12 +2,11 @@ package com.example.foroHub.service;
 
 import com.example.foroHub.model.topic.StatusEnum;
 import com.example.foroHub.model.topic.Topic;
+import com.example.foroHub.model.topic.dto.DtoUpdateTopic;
 import com.example.foroHub.repository.TopicRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-
 import java.util.Optional;
 
 @Service
@@ -31,17 +30,22 @@ public class TopicService {
         return topicRepository.findById(id);
     }
 
-    public void saveTopic(Topic topic){
+    public Topic saveTopic(Topic topic){
+        return topicRepository.save(topic);
+    }
+    public void updateTopic(Topic topic, DtoUpdateTopic data){
+        if(data.title() != null) topic.setTitle(data.title());
+        if(data.message() != null) topic.setMessage(data.message());
+        if(data.course() != null) topic.setCourse(data.course());
         topicRepository.save(topic);
     }
-
     public void deleteTopic(Long id){
         topicRepository.deleteById(id);
     }
 
-    public Topic closeTopic(Long id){
+    public void closeTopic(Long id){
         var topic = topicRepository.getReferenceById(id);
         topic.setStatus(StatusEnum.CLOSE);
-        return topicRepository.save(topic);
+        topicRepository.save(topic);
     }
 }

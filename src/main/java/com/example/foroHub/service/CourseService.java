@@ -1,10 +1,12 @@
 package com.example.foroHub.service;
 
 import com.example.foroHub.model.course.Course;
+import com.example.foroHub.model.course.dto.DtoUpdateCourse;
 import com.example.foroHub.repository.CourseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -19,14 +21,18 @@ public class CourseService {
         return courseRepository.findAll(pageable);
     }
 
-    public Course showCourseById(Long id){
-        return courseRepository.findById(id).orElse(null);
+    public Optional<Course> showCourseById(Long id){
+        return courseRepository.findById(id);
     }
 
     public Course createCourse(Course course){
         return courseRepository.save(course);
     }
-
+    public Course updateCourse(Course course,DtoUpdateCourse data){
+        if(course.getName() != null) course.setName(data.name());
+        if(course.getCategory() != null) course.setCategory(data.category());
+        return courseRepository.save(course);
+    }
     public void deleteCourse(Long id){
         courseRepository.deleteById(id);
     }
