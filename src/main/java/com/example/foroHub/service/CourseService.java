@@ -28,11 +28,13 @@ public class CourseService {
     public Course createCourse(Course course){
         return courseRepository.save(course);
     }
-    public Course updateCourse(Course course,DtoUpdateCourse data){
+
+    public void updateCourse(Course course,DtoUpdateCourse data){
         if(course.getName() != null) course.setName(data.name());
         if(course.getCategory() != null) course.setCategory(data.category());
-        return courseRepository.save(course);
+        courseRepository.save(course);
     }
+
     public void deleteCourse(Long id){
         courseRepository.deleteById(id);
     }

@@ -4,7 +4,7 @@ import com.example.foroHub.model.answer.Answer;
 import com.example.foroHub.model.answer.dto.DtoShowAnswer;
 import com.example.foroHub.model.answer.dto.DtoUpdateAnswer;
 import com.example.foroHub.service.AnswerService;
-import com.jogamp.common.net.Uri;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/answers")
+@SecurityRequirement(name = "bearer-key")
 public class AnswerController {
 
     private final AnswerService answerService;
@@ -23,6 +24,7 @@ public class AnswerController {
     public AnswerController(AnswerService answerService) {
         this.answerService = answerService;
     }
+
     @GetMapping
     public ResponseEntity<Page<DtoShowAnswer>> findAllAnswers(@PageableDefault(size = 10) Pageable pageable){
         return ResponseEntity.ok(answerService.findAllAnswers(pageable).map(DtoShowAnswer::new));
@@ -48,6 +50,7 @@ public class AnswerController {
                 .toUri();
         return ResponseEntity.created(uri).body(new DtoShowAnswer(answer));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Answer> updateAnswer(@PathVariable Long id, @RequestBody DtoUpdateAnswer data){
         var optionalAnswer = answerService.getAnswer(id);

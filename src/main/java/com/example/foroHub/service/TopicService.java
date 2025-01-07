@@ -33,12 +33,14 @@ public class TopicService {
     public Topic saveTopic(Topic topic){
         return topicRepository.save(topic);
     }
+
     public void updateTopic(Topic topic, DtoUpdateTopic data){
         if(data.title() != null) topic.setTitle(data.title());
         if(data.message() != null) topic.setMessage(data.message());
         if(data.course() != null) topic.setCourse(data.course());
         topicRepository.save(topic);
     }
+
     public void deleteTopic(Long id){
         topicRepository.deleteById(id);
     }

@@ -5,15 +5,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +53,6 @@ public class User {
     public String getUsername() {
         return username;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -60,6 +64,7 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 
     public String getPassword() {
         return password;
@@ -73,7 +78,37 @@ public class User {
         return profiles;
     }
 
-    public void setProfiles(Set<ProfileEnum> profiles) {
-        this.profiles = profiles;
+    public void setProfiles(String profiles) {
+        this.profiles.add(ProfileEnum.valueOf(profiles.toUpperCase()));
+    }
+
+    public void revokeProfile(String profile){
+        this.profiles.remove(ProfileEnum.valueOf(profile.toUpperCase()));
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return profiles.stream()
+                .map(profile -> new SimpleGrantedAuthority("ROLE_" + profile.name()))
+                .toList();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

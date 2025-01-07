@@ -25,9 +25,10 @@ public class AnswerService {
     public Optional<Answer> getAnswer(Long id){
         return answerRepository.findById(id);
     }
-    public Answer updateAnswer(Answer answer, DtoUpdateAnswer data){
+
+    public void updateAnswer(Answer answer, DtoUpdateAnswer data){
         if(data.message() != null) answer.setMessage(data.message());
-        return answerRepository.save(answer);
+        answerRepository.save(answer);
     }
 
     public void saveAnswer(Answer answer){

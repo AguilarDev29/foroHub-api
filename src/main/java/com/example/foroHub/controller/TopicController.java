@@ -5,6 +5,7 @@ import com.example.foroHub.model.topic.dto.DtoCreateTopic;
 import com.example.foroHub.model.topic.dto.DtoShowTopic;
 import com.example.foroHub.model.topic.dto.DtoUpdateTopic;
 import com.example.foroHub.service.TopicService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/topics")
+@SecurityRequirement(name = "bearer-key")
 public class TopicController {
 
     private final TopicService topicService;
@@ -90,5 +92,4 @@ public class TopicController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }

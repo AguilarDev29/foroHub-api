@@ -1,6 +1,7 @@
 package com.example.foroHub.service;
 
 import com.example.foroHub.model.user.User;
+import com.example.foroHub.model.user.dto.DtoUpdateProfile;
 import com.example.foroHub.model.user.dto.DtoUpdateUser;
 import com.example.foroHub.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -29,11 +30,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(User user, DtoUpdateUser data){
+    public void updateUser(User user, DtoUpdateUser data){
         if(data.username() != null) user.setUsername(data.username());
         if(data.email() != null) user.setEmail(data.email());
         if(data.password() != null) user.setPassword(data.password());
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public void addProfile(User user, DtoUpdateProfile data){
+        if(data.profile() != null) user.setProfiles(data.profile());
+        userRepository.save(user);
+    }
+
+    public void revokeProfile(User user, DtoUpdateProfile data){
+        if(data.profile() != null) user.revokeProfile(data.profile());
+        userRepository.save(user);
     }
 
     public void deleteUser(Long id){
